@@ -1,0 +1,22 @@
+{
+  "build": {
+    "env": {
+      "GO_BUILD_FLAGS": "-ldflags '-s -w'"
+    }
+  },
+  "routes": [
+    {
+      "src": "/index/.*/.*",
+      "dest": "/api/index.go"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
+    }
+  ],
+  "functions": {
+    "api/index.go": {
+      "maxDuration": 50
+    }
+  }
+}
