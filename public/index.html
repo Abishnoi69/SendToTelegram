@@ -3,114 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Messaging API</title>
+    <title>Send Message to Telegram</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
             margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .container {
-            background: #fff;
-            padding: 20px;
+            background-color: #fff;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
             max-width: 400px;
-            text-align: center;
+            width: 100%;
         }
         h1 {
-            font-size: 1.5em;
-            color: #333;
+            color: #0088cc;
+            text-align: center;
+            margin-bottom: 20px;
         }
         label {
-            font-size: 1em;
-            color: #555;
-            display: block;
+            font-weight: bold;
             margin-top: 10px;
-            text-align: left;
+            display: block;
         }
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
+        input, textarea {
+            border: 1px solid #ccc;
             border-radius: 4px;
-            font-size: 1em;
+            padding: 10px;
+            width: 100%;
             box-sizing: border-box;
+            margin-top: 5px;
         }
         textarea {
             resize: vertical;
         }
         button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            font-size: 1em;
-            color: #fff;
-            background-color: #007bff;
+            background-color: #0088cc;
+            color: white;
             border: none;
             border-radius: 4px;
+            padding: 10px;
             cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #0077b3;
         }
         #response {
-            margin-top: 15px;
-            font-size: 1em;
-            color: #333;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            button {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
+
 <div class="container">
-    <h1>Send a Message to Telegram</h1>
+    <h1>Send Message to Telegram</h1>
     <form id="telegramForm">
-        <label for="chat_id">Chat ID:</label>
-        <input type="text" id="chat_id" name="chat_id" required>
+        <label for="chatId">Chat ID:</label>
+        <input type="text" id="chatId" placeholder="-1001877900891" required>
 
         <label for="message">Message:</label>
-        <textarea id="message" name="message" rows="4" required></textarea>
+        <textarea id="message" rows="4" placeholder="Enter your message here..." required></textarea>
 
-        <button type="submit">Send</button>
+        <button type="submit">Send Message</button>
     </form>
-    <p id="response"></p>
+
+    <div id="response"></div>
 </div>
 
 <script>
     document.getElementById('telegramForm').addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        const chat_id = document.getElementById('chat_id').value;
+        const chatId = document.getElementById('chatId').value;
         const message = document.getElementById('message').value;
 
-        const responseElement = document.getElementById('response');
-        responseElement.textContent = "Sending...";
+        const responseDiv = document.getElementById('response');
+        responseDiv.innerHTML = '';
 
         try {
-            // Send the message to the Telegram API, todo: change url
-            const response = await fetch('https://d5c0-2409-40d4-1079-f097-64b-ec18-b744-2afd.ngrok-free.app/send', {
+            const response = await fetch('https://send-to-tg.vercel.app/send', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ chat_id, message })
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    message: message
+                }),
             });
 
-            if (response.ok) {
-                responseElement.textContent = "Message sent successfully!";
-            } else {
-                const errorText = await response.text();
-                responseElement.textContent = `Error: ${errorText}`;
-            }
+            const result = await response.text();
+            responseDiv.className = 'success';
+            responseDiv.innerHTML = `<p>${result}</p>`;
         } catch (error) {
-            responseElement.textContent = `Error: ${error.message}`;
+            responseDiv.className = 'error';
+            responseDiv.innerHTML = `<p>Error: ${error.message}</p>`;
         }
     });
 </script>
+
 </body>
 </html>

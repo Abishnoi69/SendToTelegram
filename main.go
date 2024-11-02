@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/send", api.HandleTelegramSend)
+	http.HandleFunc("/send", api.Handler)
 	port := "3000"
 
 	log.Printf("Server starting on port %s...", port)
